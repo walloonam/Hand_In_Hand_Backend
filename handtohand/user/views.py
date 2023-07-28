@@ -2,12 +2,14 @@ from datetime import datetime
 
 from django.http import JsonResponse
 from django.core.exceptions import ValidationError
+from django.utils import timezone
 from django.utils.dateparse import parse_date
 from .models import User
 from post.models import Area
 
 
 def user_signup(request):
+    timezone.deactivate()
     if request.method == 'POST':
         try:
             data = request.POST  # 클라이언트에서 전달된 데이터를 받아옵니다.
