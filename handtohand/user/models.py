@@ -1,3 +1,6 @@
+import string
+import random
+
 from django.db import models
 
 class User(models.Model):
@@ -15,3 +18,17 @@ class User(models.Model):
 class Attendance(models.Model):
     date = models.DateTimeField()
     user = models.ForeignKey('user.User', on_delete=models.CASCADE, null=True)
+
+
+class EmailVerification(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    token = models.CharField(max_length=100)
+    is_verified = models.BooleanField(default=False)
+
+    def generate_verification_token(self):
+        return ''.join(random.choices(string.ascii_letters + string.digits, k=100))
+
+    def save(self, *args, **kwargs):
+        if not self.token:
+            self.token = self.generate_verification_token()
+        super().save(*args, **kwargs)

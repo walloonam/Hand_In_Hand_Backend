@@ -8,6 +8,8 @@ class Post(models.Model):
     user = models.ForeignKey('user.User', on_delete=models.CASCADE, null=True)
     area = models.ForeignKey('post.Area', on_delete=models.CASCADE, null=True)
 
+
+
 class Area(models.Model):
     name = models.CharField(max_length=10)
 
