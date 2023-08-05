@@ -7,6 +7,7 @@ class Post(models.Model):
     point = models.IntegerField(default = 0) # 처음 시작할 때 가지는 포인트로 해야하나
     user = models.ForeignKey('user.User', on_delete=models.CASCADE, null=True)
     area = models.ForeignKey('post.Area', on_delete=models.CASCADE, null=True)
+    numChat = models.IntegerField(default=0)
 
 
 
