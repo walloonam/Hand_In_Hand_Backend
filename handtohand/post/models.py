@@ -8,7 +8,7 @@ class Post(models.Model):
     user = models.ForeignKey('user.User', on_delete=models.CASCADE, null=True)
     area = models.ForeignKey('post.Area', on_delete=models.CASCADE, null=True)
     numChat = models.IntegerField(default=0)
-
+    declare = models.IntegerField(default=0)
 
 
 class Area(models.Model):
