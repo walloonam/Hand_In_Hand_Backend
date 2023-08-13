@@ -43,3 +43,11 @@ class EmailVerification(models.Model):
 
     def verification(self):
         return self.is_verified
+
+
+class Token(models.Model):
+    email=models.ForeignKey('user.User', on_delete=models.CASCADE)
+    token = models.CharField(max_length=100, null=True)
+
+    def generate_verification_token(self):
+        return ''.join(random.choices(string.ascii_letters + string.digits, k=100))

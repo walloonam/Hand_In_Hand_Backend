@@ -4,6 +4,14 @@ from user import views
 
 urlpatterns = [
     path('', views.user_signup, name="user_create"),
-    path('emailvalidation', views.email_validation, name="email_validation"),
+    path('emailvalidation/', views.email_validation, name="email_validation"),
     path('verify/<int:pk>/<str:token>/', views.verify_email, name='verify_email'),
+    path('login/',views.login,name="login"),
+    path('logout/',views.logout,name="logout"),
+    path('find_email/',views.find_email,name="find_email"),
+    path('find_password/',views.find_password,name="find_password"),
+    path('password_reset/',views.password_reset,name="password_reset"),
+    path('check_email/',views.check_email,name="check_email"),
+    path('check_nickname/', views.check_nickname, name="check_nickname"),
+    path('info/', views.user_info, name="user_info")
 ]

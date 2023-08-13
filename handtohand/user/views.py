@@ -1,6 +1,7 @@
 from datetime import datetime
 
 from django.contrib.auth import authenticate
+from django.core import serializers
 from django.core.mail import send_mail
 from django.http import JsonResponse, HttpResponse
 from django.core.exceptions import ValidationError
@@ -10,7 +11,7 @@ from django.utils.dateparse import parse_date
 from django.views.decorators.csrf import csrf_exempt
 
 from .decorators import email_verification_required
-from .models import User, EmailVerification
+from .models import User, EmailVerification, Token
 from post.models import Area
 
 from .utils import send_verification_email
@@ -94,7 +95,7 @@ def user_signup(request):
             else:
                 return HttpResponse("이메일 인증 실패")
 
-            return JsonResponse({"message": "회원가입에 성공하였습니다."}, status=201)
+            return JsonResponse({"message": "success"}, status=201)
         except ValidationError as e:
             return JsonResponse({"message": str(e)}, status=400)
         except Exception as e:
@@ -113,18 +114,9 @@ def login(request):
             user = authenticate(request, email=email, password=password)
 
             if user is not None:
-                context={
-                    "email" : user.email,
-                    "name" : user.name,
-                    "password" : user.password,
-                    "nickname" : user.nickname,
-                    "date_of_birth" : user.date_of_birth,
-                    "address" : user.address,
-                    "point" : user.point,
-                    "adopt_count" : user.adopt_count,
-                    "area" : user.area
-                }
-                return JsonResponse(context=context)
+                token = Token(email=user.email)
+                token.generate_verification_token()
+                return JsonResponse({'token': token.token})
             else:
                 return HttpResponse("아이디 비밀번호를 확인하세요")
         except Exception as e:
@@ -132,7 +124,11 @@ def login(request):
 
 
 def logout(request):
-    pass
+    if request.method=="POST":
+        token = request.POST.get("token")
+        token = Token.objects.get(token=token)
+        token.delete()
+        return JsonResponse({"message":"complete"})
 
 
 def find_email(request):
@@ -140,7 +136,7 @@ def find_email(request):
         data = request.POST
         name = data.get("name")
         birth = data.get("birth")
-        user = User.object.filter(name=name)
+        user = User.objects.filter(name=name)
         if user is not None:
             for u in user:
                 if u.date_of_birth == birth:
@@ -159,4 +155,42 @@ def find_password(request):
         data = request.POST
 
 
+def password_reset(request):
+    if request.method == "POST":
+        data = request.POST
+        email = data.get("email")
+        new_password = data.get("new_password")
+        user = User.objects.get(email=email)
+        user.password = new_password
+        user.save()
+        context = {"reuslt": "success"}
+        return JsonResponse(context)
+    else:
+        context = {"reuslt": "fail"}
+        return JsonResponse(context)
 
+def user_info(request):
+    if request.method == "POST":
+        token = request.POST.get("token")
+        email = Token.objects.get(token=token)
+        user = User.objects.get(email=email.email)
+        users = serializers.serialize("json", user)
+        return JsonResponse(users)
+
+def check_nickname(request):
+    if request.method == "POST":
+        nickname = request.POST.get("nickname")
+        user = User.objects.get(nickname=nickname)
+        if user is not None:
+            return JsonResponse({"message": "fail"})
+        else:
+            return JsonResponse({"message": "success"})
+
+def check_email(request):
+    if request.method == "POST":
+        email = request.POST.get("email")
+        user = User.objects.get(email=email)
+        if user is not None:
+            return JsonResponse({"message": "fail"})
+        else:
+            return JsonResponse({"message": "success"})
