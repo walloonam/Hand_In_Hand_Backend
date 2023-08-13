@@ -3,7 +3,7 @@ from user.models import User
 
 def serializeUser(entity: User) -> dict:
     return {
-        "email": entity.email,
+        "user": entity.email,
         "password": entity.password,
         "name": entity.name,
         "nickname": entity.nickname,
