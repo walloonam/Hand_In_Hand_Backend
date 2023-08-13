@@ -69,10 +69,10 @@ def post_list(request):
         return JsonResponse(post_list)
 
 def post_delete(request, pk):
-    if request.method == "DELETE":
-        post = Post.objects.get(id=pk)
+    post = get_object_or_404(Post, pk=pk)
+    if request.method == 'DELETE':
         post.delete()
-        return JsonResponse({"message" : "complete"})
+        return JsonResponse({'message': '게시물이 성공적으로 삭제되었습니다.'})
 
 def post_detail(request, pk):
     post = Post.objects.get(id=pk)
@@ -93,10 +93,29 @@ def post_detail(request, pk):
 # 신고 올리기
 def declare_post(request, pk):
     post = Post.objects.get(id=pk)
-    post.declare = post.declare+1
+    post.declare += 1
     post.save()
+    return JsonResponse({'message': '신고 횟수 +1 성공.'})
+
 
 #채택하기
+
+def update_post(request,pk):# 게시물 수정
+    post = Post.objects.get(id=pk)
+    if request.method == 'POST':
+        title = request.POST.get('title')
+        content = request.POST.get('content')
+        point = request.POST.get('point')
+        area = request.POST.get('area')
+        user = request.POST.get('user')
+        post.title = title
+        post.content = content
+        post.point = point
+        post.area = area
+        post.user = user
+        post.save()
+    return JsonResponse({'message': '수정 성공'})
+
 
 
 
