@@ -11,7 +11,7 @@ from django.utils.dateparse import parse_date
 from django.views.decorators.csrf import csrf_exempt
 
 from .decorators import email_verification_required
-from .models import User, EmailVerification, Token
+from .models import User, EmailVerification, Token, Attendance
 from post.models import Area
 
 from .utils import send_verification_email
@@ -194,3 +194,24 @@ def check_email(request):
             return JsonResponse({"message": "fail"})
         else:
             return JsonResponse({"message": "success"})
+
+
+def attend_check(request):
+    current_date = datetime.now().date()
+    check_date=False
+    if request.method == "POST":
+        token = request.POST.get("token")
+        token = Token.objects.get(token=token)
+        check = Attendance.objects.filter(user=token.email)
+        for ch in check:
+            if ch.date == current_date:
+                check_date=True
+        if check_date:
+            return JsonResponse({"message": "already done"})
+        else:
+            attend = Attendance(
+                user=token.email
+            )
+            attend.save()
+            return JsonResponse({"message": "success"})
+

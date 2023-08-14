@@ -4,8 +4,7 @@ from django.core import serializers
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from .models import Area, Post
-from .forms import PostForm
-from ..user.models import Token, User
+from user.models import Token, User
 
 
 def create_area(request): # 지역 생성
@@ -107,7 +106,9 @@ def update_post(request,pk):# 게시물 수정
         content = request.POST.get('content')
         point = request.POST.get('point')
         area = request.POST.get('area')
-        user = request.POST.get('user')
+        token = request.POST.get('token')
+        token = Token.objects.get(token=token)
+        user = token.nickname
         post.title = title
         post.content = content
         post.point = point

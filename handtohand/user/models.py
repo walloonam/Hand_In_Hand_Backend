@@ -5,6 +5,7 @@ from django.core.mail import EmailMessage
 from django.db import models
 
 class User(models.Model):
+    image = models.ImageField(upload_to='user/', null=True, default="simple.png")
     name = models.CharField(max_length=10,null=False, default='')
     email = models.EmailField(max_length=30)
     password = models.CharField(max_length=30)
@@ -19,7 +20,7 @@ class User(models.Model):
         app_label = 'user'
 
 class Attendance(models.Model):
-    date = models.DateTimeField()
+    date = models.DateField(auto_now_add=True)
     user = models.ForeignKey('user.User', on_delete=models.CASCADE, null=True)
     class Meta:
         app_label = 'user'
