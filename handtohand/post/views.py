@@ -43,7 +43,8 @@ def create_post(request):
         area = request.POST.get('area')
         token = request.POST.get('token')
         token = Token.objects.get(token=token)
-        user = token.nickname
+        user= User.objects.get(email=token.email)
+        user = user.nickname
         post = Post(
             title=title,
             content=content,
@@ -119,5 +120,12 @@ def update_post(request,pk):# 게시물 수정
 
 
 
-
+def my_post(request):
+    if request.method == 'POST':
+        token = request.POST.get('token')
+        token = Token.objects.get(token=token)
+        user = User.objects.get(email=token.email)
+        posts = Post.objects.filter(user=user.nickname)
+        post_list = serializers.serialize('json',posts)
+        return JsonResponse(post_list)
 
