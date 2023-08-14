@@ -41,9 +41,10 @@ def create_post(request):
         content = request.POST.get('content')
         point = request.POST.get('point')
         area = request.POST.get('area')
+        area = Area.objects.get(name=area)
         token = request.POST.get('token')
         token = Token.objects.get(token=token)
-        user = token.nickname
+        user= User.objects.get(id=token.email_id)
         post = Post(
             title=title,
             content=content,
@@ -58,14 +59,31 @@ def create_post(request):
 
 def post_list(request):
     if request.method == "POST":
-        # data = json.loads(request.body)
-        # area.name = data["name"]
-        # posts = list(Post.objects.filter(name__contains=name).values("name"))
-        area = request.POST.get('area')
-        posts = Post.objects.filter(area=area)
-        post_list=serializers.serialize('json',posts)
+        area_name = request.POST.get('area')
+        try:
+            area = Area.objects.get(name=area_name)
+            posts = Post.objects.filter(area=area)
 
-        return JsonResponse(post_list)
+            post_list = []
+            for post in posts:
+                post_data = {
+                    "pk": post.pk,
+                    "fields": {
+                        "title": post.title,
+                        "content": post.content,
+                        "created_at": post.created_at,
+                        "point": post.point,
+                        "user": post.user.nickname,  # Assuming user has a 'nickname' field
+                        "area": post.area.name,       # Assuming area has a 'name' field
+                        "numChat": post.numChat,
+                        "declare": post.declare
+                    }
+                }
+                post_list.append(post_data)
+
+            return JsonResponse({"posts": post_list}, safe=False)
+        except Area.DoesNotExist:
+            return JsonResponse({"error": "Area not found"}, status=404)
 
 def post_delete(request, pk):
     post = get_object_or_404(Post, pk=pk)
@@ -83,7 +101,7 @@ def post_detail(request, pk):
         "numChat" : post.numChat,
         "point" : post.point,
         "created_at" : post.created_at,
-        "area" : post.area
+        "area" : post.area.name
     }
     return JsonResponse(context)
     # post.objects.filter(id)
@@ -119,5 +137,29 @@ def update_post(request,pk):# 게시물 수정
 
 
 
+def my_post(request):
+    if request.method == 'POST':
+        token = request.POST.get('token')
+        token_obj = Token.objects.get(token=token)
+        user = User.objects.get(id=token_obj.email_id)
+        posts = Post.objects.filter(user=user)
 
+        post_list = []
+        for post in posts:
+            post_data = {
+                "pk": post.pk,
+                "fields": {
+                    "title": post.title,
+                    "content": post.content,
+                    "created_at": post.created_at,
+                    "point": post.point,
+                    "user": post.user.nickname,  # Assuming user has a 'nickname' field
+                    "area": post.area.name,       # Assuming area has a 'name' field
+                    "numChat": post.numChat,
+                    "declare": post.declare
+                }
+            }
+            post_list.append(post_data)
+
+        return JsonResponse(post_list, safe=False)
 

@@ -14,5 +14,6 @@ urlpatterns = [
     path('check_email/',views.check_email,name="check_email"),
     path('check_nickname/', views.check_nickname, name="check_nickname"),
     path('info/', views.user_info, name="user_info"),
-    path('attend_check/', views.attend_check, name="attend_check")
+    path('attend_check/', views.attend_check, name="attend_check"),
+    path('attend/',views.attend, name="show_attend")
 ]
