@@ -1,3 +1,4 @@
+import json
 from datetime import datetime
 
 from django.contrib.auth import authenticate
@@ -106,22 +107,25 @@ def user_signup(request):
 
 
 def login(request):
-    if request.method=="POST":
+    if request.method == "POST":
         try:
-            data=request.POST
-            email=data.get("email")
-            password=data.get("password")
-            user = authenticate(request, email=email, password=password)
-
+            data = request.POST
+            email = data.get("email")
+            password = data.get("password")
+            user = User.objects.get(email=email, password=password)
+            print(user)
             if user is not None:
-                token = Token(email=user.email)
-                token.generate_verification_token()
+                token = Token(email=user)
+                token.token=token.generate_verification_token()
+                token.save()
                 return JsonResponse({'token': token.token})
             else:
-                return HttpResponse("아이디 비밀번호를 확인하세요")
+                return JsonResponse({"message":"아이디 비밀번호를 확인하세요"})
         except Exception as e:
             print(e)
-
+            return JsonResponse({"message": "서버에러1"})
+    else:
+        return JsonResponse({"message": "서버에러"})
 
 def logout(request):
     if request.method=="POST":
@@ -136,16 +140,20 @@ def find_email(request):
         data = request.POST
         name = data.get("name")
         birth = data.get("birth")
+        date_of_birth = transform_date(birth)
+
         user = User.objects.filter(name=name)
+        print(date_of_birth)
         if user is not None:
             for u in user:
-                if u.date_of_birth == birth:
+                print(u.date_of_birth)
+                if u.date_of_birth.strftime("%Y-%m-%d") == date_of_birth:
                     context={
                         "email": u.email
                     }
-                    return JsonResponse(context=context)
+                    return JsonResponse(context)
                 else:
-                    return HttpResponse("생일이 일치 하지 않 습니다")
+                    return HttpResponse("생일이 일치 하지 않습니다")
         else:
             return HttpResponse("이름을 다시 입력해 주세요")
 
@@ -172,25 +180,48 @@ def password_reset(request):
 def user_info(request):
     if request.method == "POST":
         token = request.POST.get("token")
-        email = Token.objects.get(token=token)
-        user = User.objects.get(email=email.email)
-        users = serializers.serialize("json", user)
-        return JsonResponse(users)
+        try:
+            token_obj = Token.objects.get(token=token)
+            user = User.objects.get(pk=token_obj.email_id)
+            area_name = user.area.name if user.area else None
+
+            user_data = {
+                "pk": user.pk,
+                "fields": {
+                    "image": user.image.url if user.image else None,  # Get image URL if available
+                    "name": user.name,
+                    "email": user.email,
+                    "password": user.password,
+                    "nickname": user.nickname,
+                    "date_of_birth": user.date_of_birth,
+                    "address": user.address,
+                    "point": user.point,
+                    "adopt_count": user.adopt_count,
+                    "area": area_name,
+                }
+            }
+
+            return JsonResponse(user_data, safe=False)
+        except Token.DoesNotExist:
+            return JsonResponse({"message": "Token not found"})
+        except User.DoesNotExist:
+            return JsonResponse({"message": "User not found"})
 
 def check_nickname(request):
     if request.method == "POST":
         nickname = request.POST.get("nickname")
-        user = User.objects.get(nickname=nickname)
-        if user is not None:
+        user_exists = User.objects.filter(nickname=nickname).exists()
+        if user_exists:
             return JsonResponse({"message": "fail"})
         else:
             return JsonResponse({"message": "success"})
 
+
 def check_email(request):
     if request.method == "POST":
         email = request.POST.get("email")
-        user = User.objects.get(email=email)
-        if user is not None:
+        user_exists = User.objects.filter(email=email).exists()
+        if user_exists:
             return JsonResponse({"message": "fail"})
         else:
             return JsonResponse({"message": "success"})
@@ -215,3 +246,25 @@ def attend_check(request):
             attend.save()
             return JsonResponse({"message": "success"})
 
+def transform_date(date_string):
+    if len(date_string) == 6 and date_string.isdigit():
+        date_obj = datetime.strptime(date_string, "%y%m%d")
+        formatted_date = date_obj.strftime("%Y-%m-%d")
+        return formatted_date
+    else:
+        return None
+
+
+def attend(request):
+    if request.method == "POST":
+        try:
+            user_token = request.POST.get("token")
+            token = Token.objects.get(token=user_token)
+
+            attend_qs = Attendance.objects.filter(user_id=token.email_id)
+            attend_data = list(attend_qs.values("date"))
+
+            return JsonResponse(attend_data, safe=False)
+        except Exception as e:
+            print(e)
+            return JsonResponse({"error": str(e)}, status=500)

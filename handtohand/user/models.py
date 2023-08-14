@@ -10,7 +10,7 @@ class User(models.Model):
     email = models.EmailField(max_length=30)
     password = models.CharField(max_length=30)
     nickname = models.CharField(max_length=10,null=False, default='')
-    date_of_birth = models.DateTimeField(max_length=20)
+    date_of_birth = models.DateField(max_length=20)
     address = models.CharField(max_length=1000)
     point = models.IntegerField()
     adopt_count = models.IntegerField(default=0)
