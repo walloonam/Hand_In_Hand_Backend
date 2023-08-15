@@ -183,6 +183,7 @@ def user_info(request):
     if request.method == "POST":
         data = json.loads(request.body)
         token = data.get("token")
+        print(token)
         try:
             token_obj = Token.objects.get(token=token)
             user = User.objects.get(pk=token_obj.email_id)
