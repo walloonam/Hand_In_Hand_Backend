@@ -1,6 +1,7 @@
 import json
 
 from django.core import serializers
+from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
 from django.http import JsonResponse
 from django.shortcuts import render
@@ -18,9 +19,18 @@ from user.models import Attendance
 
 def delete_room(request, pk):
     if request.method == 'DELETE':
-        room=Room.objects.get(id=pk)
-        room.delete()
-        JsonResponse({"message": "delete"})
+        try:
+            room = Room.objects.get(id=pk)
+            room.delete()
+            return JsonResponse({"message": "삭제되었습니다."})
+
+        except ObjectDoesNotExist:
+            return JsonResponse({"error": "해당 방을 찾을 수 없습니다."}, status=404)
+
+        except Exception as e:
+            return JsonResponse({"error": f"오류가 발생했습니다: {str(e)}"}, status=500)
+
+    return JsonResponse({"error": "DELETE 요청이 필요합니다."}, status=405)
 
 # Create your views here.
 def create_room(request):
