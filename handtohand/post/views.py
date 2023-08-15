@@ -169,3 +169,10 @@ def my_post(request):
 
         return JsonResponse(post_list, safe=False)
 
+def get_areas(request):
+    try:
+        areas = Area.objects.all()
+        areas_list = [{'id': area.id, 'name': area.name} for area in areas]
+        return JsonResponse({'areas': areas_list})
+    except Exception as e:
+        return JsonResponse({'error': f'오류가 발생했습니다: {str(e)}'}, status=500)

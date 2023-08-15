@@ -300,7 +300,7 @@ def update_info(request):
 
             nickname = data.get('nickname')
             if nickname:
-                if User.objects.exclude(email=email).filter(nickname=nickname).exists():
+                if User.objects.filter(nickname=nickname).exists():
                     return JsonResponse({'error': '이미 사용 중인 닉네임입니다.'}, status=400)
                 user.nickname = nickname
 
