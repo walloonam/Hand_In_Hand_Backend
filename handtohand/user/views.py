@@ -320,3 +320,19 @@ def update_info(request):
             return JsonResponse({'error': f'오류가 발생했습니다: {str(e)}'}, status=500)
 
     return JsonResponse({'error': 'POST 요청이 필요합니다.'}, status=405)
+
+
+def delete_user(request):
+    if request.method == "POST":
+        try:
+            data = json.loads(request.body)
+            email = data.get("email")
+            user = User.objects.get(email=email)
+            user.delete()
+            return JsonResponse({"message": "사용자가 성공적으로 삭제되었습니다."})
+        except User.DoesNotExist:
+            return JsonResponse({"message": "해당 이메일을 가진 사용자가 없습니다."}, status=400)
+        except Exception as e:
+            return JsonResponse({"message": "사용자 삭제 중 오류가 발생했습니다.", "error": str(e)}, status=500)
+    else:
+        return JsonResponse({"message": "POST 요청이 필요합니다."}, status=405)
