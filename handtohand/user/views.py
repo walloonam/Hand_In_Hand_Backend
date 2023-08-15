@@ -109,7 +109,7 @@ def user_signup(request):
 def login(request):
     if request.method == "POST":
         try:
-            data = request.POST
+            data = json.loads(request.body)
             email = data.get("email")
             password = data.get("password")
             user = User.objects.get(email=email, password=password)
