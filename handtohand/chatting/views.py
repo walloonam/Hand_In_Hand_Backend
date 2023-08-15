@@ -26,7 +26,7 @@ def delete_room(request, pk):
 def create_room(request):
     if request.method == 'POST':
         try:
-            data = request.POST
+            data = json.loads(request.body)
             post_id = data.get("post_id")
             post = Post.objects.get(id=post_id)
             owner = post.user
@@ -67,6 +67,9 @@ def main_dto(pk):
         main_content = {
             "owner" : m.owner.adopt_count,
             "custom" : m.customer.adopt_count,
+            "customN" : m.customer.nickname,
+            "ownerN" : m.owner.nickname,
+            "point" : m.post.point,
             "room_id": m.pk,
             "title": m.post.title,
             "chat": chat_data
@@ -96,6 +99,9 @@ def sub_dto(pk):
         sub_content = {
             "owner": m.owner.adopt_count,
             "custom": m.customer.adopt_count,
+            "customN": m.customer.nickname,
+            "ownerN": m.owner.nickname,
+            "point": m.post.point,
             "room_id": m.pk,
             "title": m.post.title,
             "chat": chat_data
@@ -107,7 +113,8 @@ def sub_dto(pk):
 
 def show_chat(request):
     if request.method == "POST":
-        user_token = request.POST.get("token")
+        data = json.loads(request.body)
+        user_token = data.get("token")
         user = Token.objects.get(token=user_token)
         user_id = user.email_id
         user=User.objects.get(id=user_id)
@@ -129,7 +136,7 @@ def show_chat(request):
 def create_chat(request):
     if request.method == "POST":
         try:
-            data = request.POST
+            data = request.data
             content = data.get("content")
             user_token = data.get("token")
             token = Token.objects.get(token=user_token)
@@ -156,7 +163,8 @@ def create_chat(request):
 def choice(request):
     if request.method == "POST":
         try:
-            room_id = request.POST.get("room_id")
+            data = json.loads(request.body)
+            room_id = data.get("room_id")
             room = Room.objects.get(id=room_id)
             user1 = User.objects.get(id=room.owner_id)
             user2 = User.objects.get(id=room.customer_id)
