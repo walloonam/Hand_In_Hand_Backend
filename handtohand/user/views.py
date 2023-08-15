@@ -18,7 +18,8 @@ from post.models import Area
 from .utils import send_verification_email
 def email_validation(request):
     if request.method == 'POST':
-        email = request.POST.get('email')
+        data = json.loads(request.body)
+        email = data.get('email')
         try:
             email = EmailVerification(email=email)
             token = email.generate_verification_token()
@@ -56,7 +57,7 @@ def user_signup(request):
     timezone.deactivate()
     if request.method == 'POST':
         try:
-            data = request.POST  # 클라이언트에서 전달된 데이터를 받아옵니다.
+            data = json.loads(request.body)
             #user 비밀번호 :aqazcmcqyoxnjdlx
             # 데이터 유효성 검사
             name = data.get('name')
@@ -129,7 +130,8 @@ def login(request):
 
 def logout(request):
     if request.method=="POST":
-        token = request.POST.get("token")
+        data = json.loads(request.body)
+        token = data.get("token")
         token = Token.objects.get(token=token)
         token.delete()
         return JsonResponse({"message":"complete"})
@@ -137,7 +139,7 @@ def logout(request):
 
 def find_email(request):
     if request.method == "POST":
-        data = request.POST
+        data = json.loads(request.body)
         name = data.get("name")
         birth = data.get("birth")
         date_of_birth = transform_date(birth)
@@ -160,12 +162,12 @@ def find_email(request):
 
 def find_password(request):
     if request.method == "POST":
-        data = request.POST
+        data = json.loads(request.body)
 
 
 def password_reset(request):
     if request.method == "POST":
-        data = request.POST
+        data = json.loads(request.body)
         email = data.get("email")
         new_password = data.get("new_password")
         user = User.objects.get(email=email)
@@ -210,7 +212,8 @@ def user_info(request):
 
 def check_nickname(request):
     if request.method == "POST":
-        nickname = request.POST.get("nickname")
+        data = json.loads(request.body)
+        nickname = data.get("nickname")
         user_exists = User.objects.filter(nickname=nickname).exists()
         if user_exists:
             return JsonResponse({"message": "fail"})
@@ -220,7 +223,8 @@ def check_nickname(request):
 
 def check_email(request):
     if request.method == "POST":
-        email = request.POST.get("email")
+        data = json.loads(request.body)
+        email = data.get("email")
         user_exists = User.objects.filter(email=email).exists()
         if user_exists:
             return JsonResponse({"message": "fail"})
@@ -232,7 +236,8 @@ def attend_check(request):
     current_date = datetime.now().date()
     check_date=False
     if request.method == "POST":
-        token = request.POST.get("token")
+        data = json.loads(request.body)
+        token = data.get("token")
         token = Token.objects.get(token=token)
         check = Attendance.objects.filter(user=token.email)
         for ch in check:
@@ -259,7 +264,8 @@ def transform_date(date_string):
 def attend(request):
     if request.method == "POST":
         try:
-            user_token = request.POST.get("token")
+            data = json.loads(request.body)
+            user_token = data.get("token")
             token = Token.objects.get(token=user_token)
 
             attend_qs = Attendance.objects.filter(user_id=token.email_id)

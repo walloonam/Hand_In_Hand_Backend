@@ -26,7 +26,7 @@ def delete_room(request, pk):
 def create_room(request):
     if request.method == 'POST':
         try:
-            data = request.POST
+            data = json.loads(request.body)
             post_id = data.get("post_id")
             post = Post.objects.get(id=post_id)
             owner = post.user
@@ -163,7 +163,8 @@ def create_chat(request):
 def choice(request):
     if request.method == "POST":
         try:
-            room_id = request.POST.get("room_id")
+            data = json.loads(request.body)
+            room_id = data.get("room_id")
             room = Room.objects.get(id=room_id)
             user1 = User.objects.get(id=room.owner_id)
             user2 = User.objects.get(id=room.customer_id)

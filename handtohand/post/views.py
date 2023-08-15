@@ -9,7 +9,8 @@ from user.models import Token, User
 
 def create_area(request): # 지역 생성
     if request.method == 'POST':
-        name = request.POST.get('name')
+        data = json.loads(request.body)
+        name = data.get('name')
         if name:
             area = Area.objects.create(name=name)
             return JsonResponse({'message': '지역이 성공적으로 생성되었습니다.', 'name': area.name})
@@ -37,12 +38,13 @@ def delete_area(request, pk): # 지역 삭제
 #     return JsonResponse({'message': '작성 성공'})
 def create_post(request):
     if request.method == 'POST':
-        title = request.POST.get('title')
-        content = request.POST.get('content')
-        point = request.POST.get('point')
-        area = request.POST.get('area')
+        data = json.loads(request.body)
+        title = data.get('title')
+        content = data.get('content')
+        point = data.get('point')
+        area = data.get('area')
         area = Area.objects.get(name=area)
-        token = request.POST.get('token')
+        token = data.get('token')
         token = Token.objects.get(token=token)
         user= User.objects.get(id=token.email_id)
         post = Post(
@@ -59,7 +61,8 @@ def create_post(request):
 
 def post_list(request):
     if request.method == "POST":
-        area_name = request.POST.get('area')
+        data = json.loads(request.body)
+        area_name = data.get('area')
         try:
             area = Area.objects.get(name=area_name)
             posts = Post.objects.filter(area=area)
@@ -120,11 +123,13 @@ def declare_post(request, pk):
 def update_post(request,pk):# 게시물 수정
     post = Post.objects.get(id=pk)
     if request.method == 'POST':
-        title = request.POST.get('title')
-        content = request.POST.get('content')
-        point = request.POST.get('point')
-        area = request.POST.get('area')
-        token = request.POST.get('token')
+        data = json.loads(request.body)
+
+        title = data.get('title')
+        content = data.get('content')
+        point = data.get('point')
+        area = data.get('area')
+        token = data.get('token')
         token = Token.objects.get(token=token)
         user = token.nickname
         post.title = title
@@ -139,7 +144,8 @@ def update_post(request,pk):# 게시물 수정
 
 def my_post(request):
     if request.method == 'POST':
-        token = request.POST.get('token')
+        data = json.loads(request.body)
+        token = data.get('token')
         token_obj = Token.objects.get(token=token)
         user = User.objects.get(id=token_obj.email_id)
         posts = Post.objects.filter(user=user)
