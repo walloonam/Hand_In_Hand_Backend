@@ -183,7 +183,7 @@ def choice(request):
             user1 = User.objects.get(id=room.owner_id)
             user2 = User.objects.get(id=room.customer_id)
             post = Post.objects.get(id=room.post_id)
-
+            user1.adopt_count = user1.adopt_count+1
             user1.point = user1.point+post.point
             user2.point = user2.point-post.point
             user1.save()
