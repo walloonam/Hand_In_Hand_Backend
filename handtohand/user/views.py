@@ -118,7 +118,7 @@ def login(request):
                 token = Token(email=user)
                 token.token=token.generate_verification_token()
                 token.save()
-                return JsonResponse({'token': token.token, 'id':token.email_id})
+                return JsonResponse({'token': token.token, 'id': token.email_id})
             else:
                 return JsonResponse({"message":"아이디 비밀번호를 확인하세요"})
         except Exception as e:
@@ -179,7 +179,8 @@ def password_reset(request):
 
 def user_info(request):
     if request.method == "POST":
-        token = request.POST.get("token")
+        data = json.loads(request.body)
+        token = data.get("token")
         try:
             token_obj = Token.objects.get(token=token)
             user = User.objects.get(pk=token_obj.email_id)
