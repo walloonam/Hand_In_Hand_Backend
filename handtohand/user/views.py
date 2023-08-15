@@ -283,3 +283,18 @@ def attend(request):
         except Exception as e:
             print(e)
             return JsonResponse({"error": str(e)}, status=500)
+
+def update_info(request): #회원정보 수정
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        email = data.get('email')
+        user = User.objects.get(email=email)
+        nickname = data.get('nickname')
+        address = data.get('address')
+        user.nickname = nickname
+        user.address = address
+        user.save()
+        return JsonResponse({'message': '회원 정보 수정 성공'})
+
+
+
