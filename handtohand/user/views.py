@@ -5,7 +5,7 @@ from django.contrib.auth import authenticate
 from django.core import serializers
 from django.core.mail import send_mail
 from django.http import JsonResponse, HttpResponse
-from django.core.exceptions import ValidationError
+from django.core.exceptions import ValidationError, ObjectDoesNotExist
 from django.template.loader import render_to_string
 from django.utils import timezone
 from django.utils.dateparse import parse_date
@@ -284,17 +284,41 @@ def attend(request):
             print(e)
             return JsonResponse({"error": str(e)}, status=500)
 
-def update_info(request): #회원정보 수정
+
+def update_info(request):
     if request.method == 'POST':
-        data = json.loads(request.body)
-        email = data.get('email')
-        user = User.objects.get(email=email)
-        nickname = data.get('nickname')
-        address = data.get('address')
-        user.nickname = nickname
-        user.address = address
-        user.save()
-        return JsonResponse({'message': '회원 정보 수정 성공'})
+        try:
+            data = json.loads(request.body)
+            email = data.get('email')
+            if not email:
+                return JsonResponse({'error': '이메일을 제공해야 합니다.'}, status=400)
+
+            try:
+                user = User.objects.get(email=email)
+            except ObjectDoesNotExist:
+                return JsonResponse({'error': '해당 이메일의 사용자를 찾을 수 없습니다.'}, status=404)
+
+            nickname = data.get('nickname')
+            if nickname:
+                if User.objects.exclude(email=email).filter(nickname=nickname).exists():
+                    return JsonResponse({'error': '이미 사용 중인 닉네임입니다.'}, status=400)
+                user.nickname = nickname
+
+            address = data.get('address')
+            if address:
+                user.address = address
+
+            user.save()
+
+            return JsonResponse({'message': '회원 정보 수정 성공'})
+
+        except json.JSONDecodeError:
+            return JsonResponse({'error': '올바른 JSON 형식이 아닙니다.'}, status=400)
+
+        except Exception as e:
+            return JsonResponse({'error': f'오류가 발생했습니다: {str(e)}'}, status=500)
+
+    return JsonResponse({'error': 'POST 요청이 필요합니다.'}, status=405)
 
 
 
