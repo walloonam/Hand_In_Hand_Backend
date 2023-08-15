@@ -153,6 +153,7 @@ def find_email(request):
                     context={
                         "email": u.email
                     }
+                    print(context)
                     return JsonResponse(context)
                 else:
                     return HttpResponse("생일이 일치 하지 않습니다")
