@@ -107,8 +107,9 @@ def sub_dto(pk):
 
 def show_chat(request):
     if request.method == "POST":
-        print(request.data)
-        user_token = request.data.get("token")
+        data = json.loads(request.body)
+        print(data)
+        user_token = data.get("token")
         user = Token.objects.get(token=user_token)
         user_id = user.email_id
         user=User.objects.get(id=user_id)
