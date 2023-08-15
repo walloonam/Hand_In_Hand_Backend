@@ -300,7 +300,8 @@ def update_info(request):
 
             nickname = data.get('nickname')
             if nickname:
-                if User.objects.filter(nickname=nickname).exists():
+                # 중복된 닉네임이지만 현재 사용자의 닉네임이라면 예외처리하지 않음
+                if User.objects.filter(nickname=nickname).exclude(email=email).exists():
                     return JsonResponse({'error': '이미 사용 중인 닉네임입니다.'}, status=400)
                 user.nickname = nickname
 
@@ -319,6 +320,3 @@ def update_info(request):
             return JsonResponse({'error': f'오류가 발생했습니다: {str(e)}'}, status=500)
 
     return JsonResponse({'error': 'POST 요청이 필요합니다.'}, status=405)
-
-
-
