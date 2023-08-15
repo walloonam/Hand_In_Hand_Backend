@@ -186,6 +186,7 @@ def choice(request):
             user1.adopt_count = user1.adopt_count+1
             user1.point = user1.point+post.point
             user2.point = user2.point-post.point
+            room.delete()
             user1.save()
             user2.save()
 
