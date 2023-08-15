@@ -40,7 +40,7 @@ for key, value in secrets.items():
 # WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 MEDIA_ROOT = os.path.join(ROOT_DIR, 'media')
 MEDIA_URL = '/media/'
