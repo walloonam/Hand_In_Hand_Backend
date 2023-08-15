@@ -153,11 +153,15 @@ def find_email(request):
                     context={
                         "email": u.email
                     }
+                    print(context)
                     return JsonResponse(context)
                 else:
                     return HttpResponse("생일이 일치 하지 않습니다")
         else:
+            print("error1")
             return HttpResponse("이름을 다시 입력해 주세요")
+    else:
+        return HttpResponse("잘못된 요청 메서드입니다")
 
 
 def find_password(request):
@@ -254,11 +258,14 @@ def attend_check(request):
             return JsonResponse({"message": "success"})
 
 def transform_date(date_string):
-    if len(date_string) == 6 and date_string.isdigit():
-        date_obj = datetime.strptime(date_string, "%y%m%d")
-        formatted_date = date_obj.strftime("%Y-%m-%d")
-        return formatted_date
-    else:
+    try:
+        if len(date_string) == 6 and date_string.isdigit():
+            date_obj = datetime.strptime(date_string, "%y%m%d")
+            formatted_date = date_obj.strftime("%Y-%m-%d")
+            return formatted_date
+        else:
+            return None
+    except ValueError:
         return None
 
 
