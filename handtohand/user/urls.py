@@ -16,5 +16,5 @@ urlpatterns = [
     path('info/', views.user_info, name="user_info"),
     path('attend_check/', views.attend_check, name="attend_check"),
     path('attend/',views.attend, name="show_attend"),
-    path('/update_info/', views.update_info, name="update_info")
+    path('update_info/', views.update_info, name="update_info")
 ]
