@@ -258,11 +258,14 @@ def attend_check(request):
             return JsonResponse({"message": "success"})
 
 def transform_date(date_string):
-    if len(date_string) == 6 and date_string.isdigit():
-        date_obj = datetime.strptime(date_string, "%y%m%d")
-        formatted_date = date_obj.strftime("%Y-%m-%d")
-        return formatted_date
-    else:
+    try:
+        if len(date_string) == 6 and date_string.isdigit():
+            date_obj = datetime.strptime(date_string, "%y%m%d")
+            formatted_date = date_obj.strftime("%Y-%m-%d")
+            return formatted_date
+        else:
+            return None
+    except ValueError:
         return None
 
 
