@@ -160,8 +160,8 @@ def find_email(request):
         else:
             print("error1")
             return HttpResponse("이름을 다시 입력해 주세요")
-
-    return HttpResponse("잘못된 요청 메서드입니다")
+    else:
+        return HttpResponse("잘못된 요청 메서드입니다")
 
 
 def find_password(request):
