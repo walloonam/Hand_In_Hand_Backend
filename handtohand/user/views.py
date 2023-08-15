@@ -118,7 +118,7 @@ def login(request):
                 token = Token(email=user)
                 token.token=token.generate_verification_token()
                 token.save()
-                return JsonResponse({'token': token.token})
+                return JsonResponse({'token': token.token, 'id':token.email_id})
             else:
                 return JsonResponse({"message":"아이디 비밀번호를 확인하세요"})
         except Exception as e:
