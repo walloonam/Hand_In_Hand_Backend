@@ -164,7 +164,7 @@ def my_post(request):
                     "area": post.area.name,       # Assuming area has a 'name' field
                     "numChat": post.numChat,
                     "declare": post.declare,
-                    "user_id": post.user.pk
+                    "userid": post.user.id
                 }
             }
             post_list.append(post_data)
