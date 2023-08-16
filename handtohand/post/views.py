@@ -168,7 +168,7 @@ def my_post(request):
                 }
             }
             post_list.append(post_data)
-
+        print(post_list)
         return JsonResponse(post_list, safe=False)
 
 def get_areas(request):
