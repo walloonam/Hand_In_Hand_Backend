@@ -125,7 +125,7 @@ def declare_post(request, pk):
 
 def update_post(request,pk):# 게시물 수정
     post = Post.objects.get(id=pk)
-    if request.method == 'POST':
+    if request.method == 'PUT':
         data = json.loads(request.body)
 
         title = data.get('title')
