@@ -96,6 +96,7 @@ def post_delete(request, pk):
 
 def post_detail(request, pk):
     post = Post.objects.get(id=pk)
+
     # post.save()
     context = {
         "id" : post.pk,
@@ -162,7 +163,8 @@ def my_post(request):
                     "user": post.user.nickname,  # Assuming user has a 'nickname' field
                     "area": post.area.name,       # Assuming area has a 'name' field
                     "numChat": post.numChat,
-                    "declare": post.declare
+                    "declare": post.declare,
+                    "user_id": post.user.pk
                 }
             }
             post_list.append(post_data)

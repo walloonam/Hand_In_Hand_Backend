@@ -48,6 +48,7 @@ MEDIA_URL = '/media/'
 # Application definition
 
 INSTALLED_APPS = [
+    'daphne',
     'user',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -57,7 +58,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'post',
     'chatting',
-    'corsheaders'
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
@@ -91,15 +92,14 @@ TEMPLATES = [
         },
     },
 ]
+ASGI_APPLICATION = 'handtohand.asgi.application'
+
 
 WSGI_APPLICATION = 'handtohand.wsgi.application'
 
 
 # Database
-# https://docs.djangoproject.com/en/4.2/ref/settings/#databases
-
-
-
+# https://docs.djangoproject.com/en/4.2/ref/settings/#database
 
 
 

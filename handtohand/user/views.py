@@ -32,7 +32,7 @@ def email_validation(request):
             from_email = 'jh37106@gmail.com'
             recipient_list = [email.email]
 
-            send_mail(subject,content, from_email, recipient_list,html_message=message )
+            send_mail(subject,content, from_email, recipient_list, html_message=message )
             return HttpResponse("이메일 보내기 성공")
 
         except Exception as e:
@@ -58,6 +58,7 @@ def user_signup(request):
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
+            print (data)
             #user 비밀번호 :aqazcmcqyoxnjdlx
             # 데이터 유효성 검사
             name = data.get('name')
