@@ -61,7 +61,8 @@ def create_post(request):
 
 def post_list(request):
     if request.method == "POST":
-        data = json.loads(request.body)
+        # data = json.loads(request.body)
+        data = request.POST
         area_name = data.get('area')
         try:
             area = Area.objects.get(name=area_name)
@@ -79,7 +80,8 @@ def post_list(request):
                         "user": post.user.nickname,  # Assuming user has a 'nickname' field
                         "area": post.area.name,       # Assuming area has a 'name' field
                         "numChat": post.numChat,
-                        "declare": post.declare
+                        "declare": post.declare,
+                        "userId" : post.user_id
                     }
                 }
                 post_list.append(post_data)
@@ -164,7 +166,7 @@ def my_post(request):
                     "area": post.area.name,       # Assuming area has a 'name' field
                     "numChat": post.numChat,
                     "declare": post.declare,
-                    "userid": post.user.id
+                    "userid": post.user_id
                 }
             }
             post_list.append(post_data)
