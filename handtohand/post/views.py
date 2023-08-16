@@ -61,8 +61,8 @@ def create_post(request):
 
 def post_list(request):
     if request.method == "POST":
-        # data = json.loads(request.body)
-        data = request.POST
+        data = json.loads(request.body)
+        #data = request.POST
         area_name = data.get('area')
         try:
             area = Area.objects.get(name=area_name)
