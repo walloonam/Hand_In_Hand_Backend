@@ -131,15 +131,9 @@ def update_post(request,pk):# 게시물 수정
         title = data.get('title')
         content = data.get('content')
         point = data.get('point')
-        area = data.get('area')
-        token = data.get('token')
-        token = Token.objects.get(token=token)
-        user = token.nickname
         post.title = title
         post.content = content
         post.point = point
-        post.area = area
-        post.user = user
         post.save()
     return JsonResponse({'message': '수정 성공'})
 
