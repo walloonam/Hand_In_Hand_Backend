@@ -85,7 +85,7 @@ def main_dto(pk):
             "room_id": m.pk,
             "title": m.post.title,
             "chat": chat_data,
-            "post_id": m.post.pk
+            "post_id": m.post.pk,
         }
         nested_json["main"].append(main_content)
 
@@ -121,7 +121,6 @@ def sub_dto(pk):
             "title": m.post.title,
             "chat": chat_data,
             "post_id": m.post.pk
-
         }
         nested_json["sub"].append(sub_content)
 

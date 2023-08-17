@@ -17,5 +17,8 @@ urlpatterns = [
     path('attend_check/', views.attend_check, name="attend_check"),
     path('attend/',views.attend, name="show_attend"),
     path('update_info/', views.update_info, name="update_info"),
-    path('delete/user/', views.delete_user, name="delete_user")
+    path('delete/user/', views.delete_user, name="delete_user"),
+    path('emailvalidationP/', views.find_password, name="find_password"),
+    path('check_code/', views.check_code_email,name="check_code_email"),
+    path('verify_page', views.verify_page, name="verify_page")
 ]
