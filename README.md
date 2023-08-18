@@ -24,12 +24,15 @@ Hand-In-Hand Backend 프로젝트는 디지털 정보의 격차를 줄이기 위
 1. 이 저장소를 클론합니다:
 ```bash
 git clone https://github.com/walloonam/Hand_In_Hand_Backend.git
+
 2. 필요한 종속성을 설치합니다:
 ```bash
 pip install -r requirements.txt
+
 3. 데이터베이스 마이그레이션을 수행합니다:
 ```bash
 python manage.py migrate
+
 4. 서버실
 ```bash
 python manage.py runserver
