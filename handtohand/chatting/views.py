@@ -44,13 +44,18 @@ def create_room(request):
             token = data.get("token")
             token = Token.objects.get(token=token)
             customer = User.objects.get(id=token.email_id)
-            customer = customer
+
+            # Check if a room with the same post and customer already exists
+            existing_room = Room.objects.filter(post=post, customer=customer).first()
+            if existing_room:
+                return JsonResponse({"result": "fail", "message": "Room already exists for this post and customer."})
+
             room = Room(
                 post=post,
                 owner=owner,
                 customer=customer
             )
-            room.full_clean() #데이터 유효성 검사
+            room.full_clean()  # 데이터 유효성 검사
             room.save()
             return JsonResponse({"result": "success"})
         except Exception as e:
