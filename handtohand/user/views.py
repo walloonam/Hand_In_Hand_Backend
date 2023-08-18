@@ -20,7 +20,7 @@ from .utils import send_verification_email
 def email_validation(request):
     if request.method == 'POST':
         # data = json.loads(request.body)
-        data=request.POST
+        data=request.body
         email = data.get('email')
         try:
             email = EmailVerification(email=email)
@@ -183,8 +183,8 @@ def find_email(request):
 
 def find_password(request):
     if request.method == "POST":
-        # data=request.body
-        data = request.POST
+        data=request.body
+        # data = request.POST
         email = data.get('email')
         print(email)
         try:
@@ -381,8 +381,8 @@ def delete_user(request):
 
 def check_code_email(request):
     if request.method == 'POST':
-        # data = request.body
-        data=request.POST
+        data = request.body
+        # data=request.POST
         email = data.get('email')
         code = data.get('code')
 
