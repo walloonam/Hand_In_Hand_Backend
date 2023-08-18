@@ -97,8 +97,15 @@ TEMPLATES = [
         },
     },
 ]
-ASGI_APPLICATION = 'handtohand.asgi.application'
-
+ASGI_APPLICATION = 'handtohand.handtohand.asgi.application'
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("127.0.0.1", 6379)],
+        },
+    },
+}
 
 WSGI_APPLICATION = 'handtohand.wsgi.application'
 

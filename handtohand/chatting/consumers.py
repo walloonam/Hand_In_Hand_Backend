@@ -1,21 +1,55 @@
 import json
 
+from asgiref.sync import async_to_sync
 from channels.generic.websocket import WebsocketConsumer
 
 
-class ChatConsumer(WebsocketConsumer):
-    # websocket 연결 시 실행
-    def connect(self):
-        self.accept()
-        # websocket 연결 종료 시 실행
-    def disconnect(self, close_code):
-        pass
-        # 클라이언트로부터 메세지를 받을 시 실행
+import json
+
+from channels.generic.websocket import AsyncWebsocketConsumer
+
+
+class ChatConsumer(AsyncWebsocketConsumer):
+    async def connect(self):
+        self.room_name = self.scope["url_route"]["kwargs"]["room_name"]
+        self.room_group_name = f"chat_{self.room_name}"
+
+        # Join room group
+        await self.channel_layer.group_add(self.room_group_name, self.channel_name)
+
+        await self.accept()
+
+    async def disconnect(self, close_code):
+        # Leave room group
+        await self.channel_layer.group_discard(self.room_group_name, self.channel_name)
+
+    # Receive message from WebSocket
     def receive(self, text_data):
         text_data_json = json.loads(text_data)
-        message = text_data_json['message']
-#클라이언트로부터 받은 메세지를 다시 클라이언트로 보내준다.
-        self.send(text_data=json.dumps({
-            'message': message
-        }))
+        content = text_data_json['content']
+        room_id = text_data_json['room_id']
+        user_id = text_data_json['user_id']
+        # Send message to room group
+        async_to_sync(self.channel_layer.group_send)(
+            self.room_group_name,
+            {
+                'type': 'chat_message',
+                "content":content,
+                "room_id" : room_id,
+                "user_id" : user_id,
+            }
+        )
 
+    # Receive message from room group
+    def chat_message(self, event):
+        print(event)
+        content = event['content']
+        user_id = event['user_id']
+        room_id = event['room_id']
+
+        # Send message to WebSocket
+        self.send(text_data=json.dumps({
+            'content': content,
+            "user_id" : user_id,
+            "room_id" : room_id,
+        }))
