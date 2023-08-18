@@ -26,7 +26,7 @@ def email_validation(request):
             email = EmailVerification(email=email)
             token = email.generate_verification_token()
             email.save()
-            verification_url = f"http://127.0.0.1:8000/api/user/verify/{email.pk}/{token}/"
+            verification_url = f"http://3.36.130.108:8080/api/user/verify/{email.pk}/{token}/"
 
             content= 'hi'
             subject = 'Verify Your Email'
