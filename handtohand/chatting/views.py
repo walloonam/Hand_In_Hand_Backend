@@ -156,8 +156,8 @@ def create_chat(request):
     room=data.get("room_id")
     room=Room.objects.get(pk=room)
     user=data.get("user_id")
-    room=User.objects.get(pk=user)
-    new = Content(content = content,user = user,room = room)
+    user=User.objects.get(pk=user)
+    new = Content(content = content,user = user,room =room)
     new.save()
     return JsonResponse({})
     # # if request.method == "POST":
