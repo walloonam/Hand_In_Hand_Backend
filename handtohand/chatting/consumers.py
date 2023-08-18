@@ -26,8 +26,11 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     # Receive message from WebSocket
     def receive(self, text_data):
-        print(text_data)
-        text_data_json = json.loads(text_data)
+        try:
+            text_data_json = json.loads(text_data)
+        except json.JSONDecodeError as e:
+            print("JSON decoding error:", e)
+            return
         content = text_data_json.get('content')
         room_id = text_data_json.get('room_id')
         user_id = text_data_json.get('user_id')
