@@ -40,6 +40,8 @@ def create_room(request):
             data = json.loads(request.body)
             post_id = data.get("post_id")
             post = Post.objects.get(id=post_id)
+            post.numChat=post.numChat+1
+            post.save()
             owner = post.user
             token = data.get("token")
             token = Token.objects.get(token=token)
