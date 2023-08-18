@@ -25,7 +25,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         await self.channel_layer.group_discard(self.room_group_name, self.channel_name)
 
     # Receive message from WebSocket
-    def receive(self, text_data):
+    async def receive(self, text_data):
         try:
             text_data_json = json.loads(text_data)
         except json.JSONDecodeError as e:
@@ -46,7 +46,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         )
 
     # Receive message from room group
-    def chat_message(self, event):
+    async def chat_message(self, event):
         print(event)
         content = event.get('content')
         user_id = event.get('user_id')
