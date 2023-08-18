@@ -19,9 +19,10 @@ from post.models import Area
 from .utils import send_verification_email
 def email_validation(request):
     if request.method == 'POST':
-        data = json.loads(request.body)
+        data = request.body.decode('utf-8')  # 바이트를 문자열로 디코딩
+        data_dict = json.loads(data)  # JSON 파싱
         # data = request.body
-        email = data.get('email')
+        email = data_dict.get('email')
         try:
             email = EmailVerification(email=email)
             token = email.generate_verification_token()
