@@ -381,7 +381,7 @@ def delete_user(request):
 
 def check_code_email(request):
     if request.method == 'POST':
-        data = request.body
+        data = json.loads(request.body)
         # data=request.POST
         email = data.get('email')
         code = data.get('code')
