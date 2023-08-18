@@ -340,6 +340,42 @@ def attend(request):
             return JsonResponse({"error": str(e)}, status=500)
 
 
+def update_info_area(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            email = data.get('email')
+            if not email:
+                return JsonResponse({'error': '이메일을 제공해야 합니다.'}, status=400)
+
+            try:
+                user = User.objects.get(email=email)
+            except ObjectDoesNotExist:
+                return JsonResponse({'error': '해당 이메일의 사용자를 찾을 수 없습니다.'}, status=404)
+
+            area = data.get('area')
+
+            if area is None:
+                return JsonResponse({'error': '올바른 지역 정보를 제공해야 합니다.'}, status=400)
+
+            try:
+                area_info = Area.objects.get(name=area)
+            except Area.DoesNotExist:
+                return JsonResponse({'error': '해당 이름의 지역 정보를 찾을 수 없습니다.'}, status=404)
+
+            # 예외 처리를 진행한 후에야 아래 코드를 실행합니다.
+            user.area = area_info
+            user.save()
+
+            return JsonResponse({'message': '지역 정보 업데이트 완료'}, status=200)
+
+        except json.JSONDecodeError:
+            return JsonResponse({'error': '올바른 JSON 형식이 아닙니다.'}, status=400)
+
+    return JsonResponse({'error': 'POST 메서드만 지원됩니다.'}, status=405)
+
+
+
 def update_info(request):
     if request.method == 'POST':
         try:

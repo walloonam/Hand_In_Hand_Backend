@@ -20,5 +20,6 @@ urlpatterns = [
     path('emailvalidationP/', views.find_password, name="find_password"),
     path('check_code/', views.check_code_email,name="check_code_email"),
     path('verify_page', views.verify_page, name="verify_page"),
-    path('verify_page_error',views.verify_page_error, name="verify_page_error")
+    path('verify_page_error',views.verify_page_error, name="verify_page_error"),
+    path('update_info_area/',views.update_info_area, name="update_info_area")
 ]

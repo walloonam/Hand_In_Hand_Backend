@@ -97,7 +97,9 @@ TEMPLATES = [
         },
     },
 ]
-ASGI_APPLICATION = 'handtohand.handtohand.asgi.application'
+
+ASGI_APPLICATION = "handtohand.asgi.application"
+
 CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
