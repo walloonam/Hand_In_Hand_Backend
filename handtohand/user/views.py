@@ -48,8 +48,8 @@ def verify_email(request, pk, token):
     try:
         email = EmailVerification.objects.get(pk=pk)
         email.verify()
-        user=User.objects.get(email=email)
-        user.is_verified=True
+        user = User.objects.get(email=email.email)
+        user.is_verified = True
         email.save()
 
         # verify_page로 리다이렉트
