@@ -8,6 +8,7 @@ from django.shortcuts import render
 
 from chatting.dto import *
 from chatting.models import Room, Content
+from django.views.decorators.csrf import csrf_exempt
 from post.models import Post
 from user.models import User, Token
 
@@ -148,32 +149,39 @@ def show_chat(request):
             print(e)
             return JsonResponse({"error": str(e)}, status=500)
 
-
+@csrf_exempt
 def create_chat(request):
-    if request.method == "POST":
-        try:
-            data = request.data
-            content = data.get("content")
-            user_token = data.get("token")
-            token = Token.objects.get(token=user_token)
-            user= User.objects.get(id=token.email_id)
-            user_nickname = user.nickname
-            room = data.get("room_id")
-            room=Room.objects.get(id=room)
-
-            content_obj = Content(
-                content=content,
-                user=user,
-                room=room
-            )
-            content_obj.save()
-
-            return JsonResponse({"message": "success"})
-        except Exception as e:
-            print(e)
-            return JsonResponse({"message": "error", "error_details": str(e)})
-    else:
-        return JsonResponse({"message": "Invalid request method"})
+    data = json.loads(request.body)
+    content=data.get("content")
+    room=data.get("room_id")
+    user=data.get("user_id")
+    new = Content(content = content,user = user,room = room)
+    new.save()
+    return JsonResponse({})
+    # # if request.method == "POST":
+    # #     try:
+    # #         data = request.data
+    # #         content = data.get("content")
+    # #         user_token = data.get("token")
+    # #         token = Token.objects.get(token=user_token)
+    # #         user= User.objects.get(id=token.email_id)
+    # #         user_nickname = user.nickname
+    # #         room = data.get("room_id")
+    # #         room=Room.objects.get(id=room)
+    # #
+    # #         content_obj = Content(
+    # #             content=content,
+    # #             user=user,
+    # #             room=room
+    # #         )
+    # #         content_obj.save()
+    # #
+    # #         return JsonResponse({"message": "success"})
+    #     except Exception as e:
+    #         print(e)
+    #         return JsonResponse({"message": "error", "error_details": str(e)})
+    # else:
+    #     return JsonResponse({"message": "Invalid request method"})
 
 
 def choice(request):
