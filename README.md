@@ -1,6 +1,6 @@
 # Hand-In-Hand Backend (Django)
 
-![Logo](link_to_your_logo.png)
+![Uploading image.png…]()
 
 Hand-In-Hand Backend 프로젝트는 디지털 정보의 격차를 줄이기 위한 홈페이지의 Django 백엔드 부분을 담당합니다. 이 프로젝트는 변화하는 현대 사회의 기술을 어려워 하는 사람들에게 간편하게 도움을 주고 받을 수 있는 채팅 웹사이트를 구축하는 것을 목표로 합니다.
 
@@ -28,15 +28,15 @@ git clone https://github.com/walloonam/Hand_In_Hand_Backend.git
 2. 필요한 종속성을 설치합니다:
 ```bash
 pip install -r requirements.txt
-
+```
 3. 데이터베이스 마이그레이션을 수행합니다:
 ```bash
 python manage.py migrate
-
+```
 4. 서버실
 ```bash
 python manage.py runserver
-
+```
 #기여 방법
 
 이 프로젝트에 기여하려면 다음 단계를 따라주세요:
