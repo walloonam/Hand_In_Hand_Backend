@@ -194,9 +194,12 @@ def find_email(request):
 
 def find_password(request):
     if request.method == "POST":
-        data=request.body
+        data = request.body.decode('utf-8')  # 바이트를 문자열로 디코딩
+        data_dict = json.loads(data)  # JSON 파싱
+        # data = request.body
+
         # data = request.POST
-        email = data.get('email')
+        email = data_dict.get('email')
         print(email)
         try:
             password_verification = PasswordVerification(email=email)
