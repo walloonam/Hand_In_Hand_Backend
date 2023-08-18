@@ -13,10 +13,10 @@ class ChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         #이친구둘은 없어도 될지도
         self.room_name = 'hi'
-        # self.room_group_name = f"chat_{self.room_name}"
+        self.room_group_name = f"chat_{self.room_name}"
 
         # Join room group
-        # await self.channel_layer.group_add(self.channel_name)
+        await self.channel_layer.group_add(self.channel_name)
 
         await self.accept()
 
