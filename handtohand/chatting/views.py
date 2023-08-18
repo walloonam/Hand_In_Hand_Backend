@@ -70,7 +70,7 @@ def main_dto(pk):
 
     for m in main_room:
         chat = Content.objects.filter(
-            Q(user=user, room=m.pk) | Q(user=m.customer, room=m.pk)
+            Q(user=user, room=m.pk) | Q(user=m.owner, room=m.pk)
         )
         chat_data = []
         for c in chat.order_by('pk'):  # Order chat by pk
@@ -105,7 +105,7 @@ def sub_dto(pk):
 
     for m in sub_room:
         chat = Content.objects.filter(
-            Q(user=user, room=m.pk) | Q(user=m.owner, room=m.pk)
+            Q(user=user, room=m.pk) | Q(user=m.customer, room=m.pk)
         )
         chat_data = []
         for c in chat.order_by('pk'):  # Order chat by pk
