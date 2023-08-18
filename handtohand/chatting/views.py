@@ -83,10 +83,10 @@ def main_dto(pk):
                 }
             })
         main_content = {
-            "owner" : m.owner.adopt_count,
-            "custom" : m.customer.adopt_count,
-            "customN" : m.customer.nickname,
-            "ownerN" : m.owner.nickname,
+            "owner" : m.customer.adopt_count,
+            "custom" : m.owner.adopt_count,
+            "customN" : m.owner.nickname,
+            "ownerN" : m.customer.nickname,
             "point" : m.post.point,
             "room_id": m.pk,
             "title": m.post.title,
@@ -118,10 +118,10 @@ def sub_dto(pk):
                 }
             })
         sub_content = {
-            "owner": m.owner.adopt_count,
-            "custom": m.customer.adopt_count,
-            "customN": m.customer.nickname,
-            "ownerN": m.owner.nickname,
+            "owner": m.customer.adopt_count,
+            "custom": m.owner.adopt_count,
+            "customN": m.owner.nickname,
+            "ownerN": m.customer.nickname,
             "point": m.post.point,
             "room_id": m.pk,
             "title": m.post.title,
