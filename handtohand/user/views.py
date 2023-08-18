@@ -19,8 +19,8 @@ from post.models import Area
 from .utils import send_verification_email
 def email_validation(request):
     if request.method == 'POST':
-        # data = json.loads(request.body)
-        data=request.body
+        data = json.loads(request.body)
+        # data = request.body
         email = data.get('email')
         try:
             email = EmailVerification(email=email)
