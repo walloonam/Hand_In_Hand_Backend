@@ -38,7 +38,7 @@ python manage.py migrate
 ```bash
 python manage.py runserver
 ```
-#기여 방법
+## 기여 방법
 
 이 프로젝트에 기여하려면 다음 단계를 따라주세요:
 
