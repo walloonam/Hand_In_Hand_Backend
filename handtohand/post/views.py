@@ -66,7 +66,8 @@ def post_list(request):
         area_name = data.get('area')
         try:
             area = Area.objects.get(name=area_name)
-            posts = Post.objects.filter(area=area)
+            posts = Post.objects.filter(area=area).order_by('-created_at')
+
 
             post_list = []
             for post in posts:
