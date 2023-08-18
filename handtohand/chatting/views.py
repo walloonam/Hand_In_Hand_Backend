@@ -64,13 +64,14 @@ def create_room(request):
 
 
 def main_dto(pk):
-    nested_json = {"main": []}
+    nested_json = {"sub": []}
     user = User.objects.get(pk=pk)
-    main_room = Room.objects.filter(owner=user)
+    main_room = Room.objects.filter(customer=user)
 
     for m in main_room:
         chat = Content.objects.filter(
-            Q(user=user, room=m.pk) | Q(user=m.owner, room=m.pk)
+            Q(user=user, room=m.pk) | Q(user=m.customer, room=m.pk)
+
         )
         chat_data = []
         for c in chat.order_by('pk'):  # Order chat by pk
@@ -93,19 +94,19 @@ def main_dto(pk):
             "chat": chat_data,
             "post_id": m.post.pk,
         }
-        nested_json["main"].append(main_content)
+        nested_json["sub"].append(main_content)
 
     return nested_json
 
 
 def sub_dto(pk):
-    nested_json = {"sub": []}
+    nested_json = {"main": []}
     user = User.objects.get(pk=pk)
-    sub_room = Room.objects.filter(customer=user)
+    sub_room = Room.objects.filter(owner=user)
 
     for m in sub_room:
         chat = Content.objects.filter(
-            Q(user=user, room=m.pk) | Q(user=m.customer, room=m.pk)
+            Q(user=user, room=m.pk) | Q(user=m.owner, room=m.pk)
         )
         chat_data = []
         for c in chat.order_by('pk'):  # Order chat by pk
@@ -128,7 +129,7 @@ def sub_dto(pk):
             "chat": chat_data,
             "post_id": m.post.pk
         }
-        nested_json["sub"].append(sub_content)
+        nested_json["main"].append(sub_content)
 
     return nested_json
 
