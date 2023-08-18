@@ -1,6 +1,6 @@
 # Hand-In-Hand Backend (Django)
 
-![Uploading image.png…]()
+![image](https://github.com/walloonam/Hand_In_Hand_Backend/assets/80560040/08a2a9d8-e6a4-48cb-85b1-f9afa8fc4ef7)
 
 Hand-In-Hand Backend 프로젝트는 디지털 정보의 격차를 줄이기 위한 홈페이지의 Django 백엔드 부분을 담당합니다. 이 프로젝트는 변화하는 현대 사회의 기술을 어려워 하는 사람들에게 간편하게 도움을 주고 받을 수 있는 채팅 웹사이트를 구축하는 것을 목표로 합니다.
 
