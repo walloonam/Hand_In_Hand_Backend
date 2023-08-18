@@ -44,16 +44,26 @@ def email_validation(request):
     elif request.method == "GET":
         email = request.GET.get('email')
 
+
 def verify_email(request, pk, token):
     try:
         email = EmailVerification.objects.get(pk=pk)
         email.verify()
-        user = User.objects.get(email=email.email)
-        user.is_verified = True
-        email.save()
 
-        # verify_page로 리다이렉트
-        return redirect('verify_page')
+        try:
+            user = User.objects.get(email=email.email)
+            email.delete()
+            user.is_verified = True
+            user.save()
+
+            # verify_page로 리다이렉트
+            return redirect('verify_page')
+
+        except User.DoesNotExist:
+            return HttpResponse("User not found error")
+
+    except EmailVerification.DoesNotExist:
+        return redirect('verify_page_error')  # Email verification이 존재하지 않을 때 verify_page_error로 리다이렉트
 
     except EmailVerification.DoesNotExist:
         return HttpResponse("error user 오류")
@@ -400,3 +410,7 @@ def check_code_email(request):
                 return JsonResponse({"message": "invalid_code"})
         except PasswordVerification.DoesNotExist:
             return JsonResponse({"message": "verification_data_not_found"})
+
+
+def verify_page_error(request):
+    return render(request,'mail_checked_fail.html')
